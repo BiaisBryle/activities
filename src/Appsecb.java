@@ -6,10 +6,10 @@ public class Appsecb {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        System.out.println("HELLO, WELCOME TO THE SYSTEM!");
-        System.out.println("What do you feel like doing today?");
+        System.out.println("HELLO WELCOME TO THE SYSTEM!");
+        System.out.println("What do you feel doing today?");
         System.out.println("1. Banking");
-        System.out.println("2. Doctor's Appointment");
+        System.out.println("2. Doctors Appointment");
         System.out.println("3. Shopping");
 
         System.out.print("Enter choice: ");
@@ -18,46 +18,59 @@ public class Appsecb {
         switch (choice) {
             case 1:
                 bankingclass bc = new bankingclass();
-                boolean isValid = false;
 
-                // Limit to 3 attempts
-                for (int attempt = 1; attempt <= 3; attempt++) {
+                int accAttempts = 0;
+                boolean accountVerified = false;
+                int enteredAccountNo = 0;
+
+              
+                while (accAttempts < 3 && !accountVerified) {
                     System.out.print("Enter your Account No: ");
-                    int accountNo = sc.nextInt();
+                    enteredAccountNo = sc.nextInt();
 
-                    System.out.print("Enter your PIN: ");
-                    int pin = sc.nextInt();
-
-                    if (bc.verifyAccount(accountNo, pin)) {
-                        System.out.println("LOGIN SUCCESS!");
-                        isValid = true;
-                        break;
+                    if (enteredAccountNo == bc.setAccount()) {
+                        accountVerified = true;
                     } else {
-                        System.out.println("❌ INVALID ACCOUNT NUMBER OR PIN!");
-                        if (attempt < 3) {
-                            System.out.println("⚠️ Attempts remaining: " + (3 - attempt));
+                        accAttempts++;
+                        System.out.println("❌ INVALID ACCOUNT! Attempts left: " + (3 - accAttempts));
+                        if (accAttempts == 3) {
+                            System.out.println("🚫 Too many failed attempts. System will exit.");
+                            System.exit(0);
                         }
                     }
                 }
 
-                if (!isValid) {
-                    System.out.println("🚫 Too many failed attempts. System will now exit.");
-                    System.exit(0);
+           
+                int pinAttempts = 0;
+                boolean pinVerified = false;
+
+                while (pinAttempts < 3 && !pinVerified) {
+                    System.out.print("Enter your PIN: ");
+                    int enteredPin = sc.nextInt();
+
+                    if (bc.verifyAccount(enteredAccountNo, enteredPin)) {
+                        pinVerified = true;
+                        System.out.println("✅ LOGIN SUCCESS!");
+                    } else {
+                        pinAttempts++;
+                        System.out.println("❌ WRONG PIN! Attempts left: " + (3 - pinAttempts));
+                        if (pinAttempts == 3) {
+                            System.out.println("🚫 Too many incorrect PIN attempts. System will exit.");
+                            System.exit(0);
+                        }
+                    }
                 }
 
-                // Proceed with banking services if login is successful
-                // Example: bc.showMenu();
-
+              
+                System.out.println("🏦 Accessing your banking dashboard...");
                 break;
 
             case 2:
-                System.out.println("You chose Doctor's Appointment.");
-                // Add code here for doctor's appointment
+                System.out.println("🩺 Doctor's appointment feature coming soon...");
                 break;
 
             case 3:
-                System.out.println("You chose Shopping.");
-                // Add code here for shopping
+                System.out.println("🛍️ Shopping feature coming soon...");
                 break;
 
             default:
