@@ -5,78 +5,142 @@ public class Appsecb {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+        bankingclass[] bApp = new bankingclass[10];
+        int accountIndex = 0;
 
-        System.out.println("HELLO WELCOME TO THE SYSTEM!");
-        System.out.println("What do you feel doing today?");
-        System.out.println("1. Banking");
-        System.out.println("2. Doctors Appointment");
-        System.out.println("3. Shopping");
+        System.out.println("WELCOME TO MY SYSTEM");
 
-        System.out.print("Enter choice: ");
-        int choice = sc.nextInt();
+        boolean running = true;
+        while (running) {
+            System.out.println("\nWhat do you feel like doing today?");
+            System.out.println("1 - Banking");
+            System.out.println("2 - Password");
+            System.out.println("3 - Pay Bills");
+            System.out.print("Enter your choice: ");
+            int choice = sc.nextInt();
 
-        switch (choice) {
-            case 1:
-                bankingclass bc = new bankingclass();
+            switch (choice) {
+                case 1:
+                    System.out.println("\n1 - Create Account");
+                    System.out.println("2 - Login Account");
+                    System.out.println("3 - Pay Bills");
+                    System.out.print("Enter your selection: ");
+                    int action = sc.nextInt();
 
-                int accAttempts = 0;
-                boolean accountVerified = false;
-                int enteredAccountNo = 0;
+                    switch (action) {
+                        case 1:
+                            if (accountIndex >= bApp.length) {
+                                System.out.println("Cannot create more accounts.");
+                                break;
+                            }
 
-              
-                while (accAttempts < 3 && !accountVerified) {
-                    System.out.print("Enter your Account No: ");
-                    enteredAccountNo = sc.nextInt();
+                            System.out.print("Enter Account No.: ");
+                            int accNo = sc.nextInt();
+                            System.out.print("Enter Pin No.: ");
+                            int pin = sc.nextInt();
+                            System.out.print("Enter a Pin Again: ");
+                            int pinConfirm = sc.nextInt();
 
-                    if (enteredAccountNo == bc.setAccount()) {
-                        accountVerified = true;
-                    } else {
-                        accAttempts++;
-                        System.out.println("❌ INVALID ACCOUNT! Attempts left: " + (3 - accAttempts));
-                        if (accAttempts == 3) {
-                            System.out.println("🚫 Too many failed attempts. System will exit.");
-                            System.exit(0);
-                        }
+                            if (pin == pinConfirm) {
+                                bankingclass newAccount = new bankingclass();
+                                newAccount.setAccNo(accNo);
+                                newAccount.setPin(pin);
+                                bApp[accountIndex++] = newAccount;
+                                System.out.println("Account created successfully!");
+                            } else {
+                                System.out.println("Pins do not match.");
+                            }
+                            break;
+
+                        case 2:
+                            int attempts = 0;
+                            boolean isAuthenticated = false;
+                            bankingclass loggedInAccount = null;
+
+                            while (attempts < 3 && !isAuthenticated) {
+                                System.out.print("Enter Account No.: ");
+                                int enteredAccNo = sc.nextInt();
+                                System.out.print("Enter Pin: ");
+                                int enteredPin = sc.nextInt();
+
+                                for (int i = 0; i < accountIndex; i++) {
+                                    if (bApp[i].verifyAccount(enteredAccNo, enteredPin)) {
+                                        loggedInAccount = bApp[i];
+                                        isAuthenticated = true;
+                                        break;
+                                    }
+                                }
+
+                                if (!isAuthenticated) {
+                                    attempts++;
+                                    if (attempts < 3) {
+                                        System.out.println("Invalid Account No. or Pin. Try again (" + (3 - attempts) + " attempt(s) left).");
+                                    } else {
+                                        System.out.println("Maximum login attempts reached. Returning to menu.");
+                                    }
+                                }
+                            }
+
+                            if (isAuthenticated) {
+                                System.out.println("Login Success!");
+                                System.out.println("1 - Deposit");
+                                System.out.println("2 - Withdraw");
+                                System.out.println("3 - Check Balance");
+                                System.out.print("Enter your choice: ");
+                                int option = sc.nextInt();
+
+                                switch (option) {
+                                    case 1:
+                                        System.out.print("Enter amount to deposit: ");
+                                        float depositAmount = sc.nextFloat();
+                                        loggedInAccount.deposit(depositAmount);
+                                        break;
+                                    case 2:
+                                        System.out.print("Enter amount to withdraw: ");
+                                        float withdrawAmount = sc.nextFloat();
+                                        loggedInAccount.withdraw(withdrawAmount);
+                                        break;
+                                    case 3:
+                                        System.out.println("Your current balance is: " + loggedInAccount.getBalance());
+                                        break;
+                                    default:
+                                        System.out.println("INVALID OPTION");
+                                        break;
+                                }
+                            }
+                            break;
+
+                        case 3:
+                            System.out.println("Bill payment functionality not implemented yet.");
+                            break;
+
+                        default:
+                            System.out.println("INVALID SELECTION");
+                            break;
                     }
-                }
+                    break;
 
-           
-                int pinAttempts = 0;
-                boolean pinVerified = false;
+                case 2:
+                    System.out.println("Password functionality not implemented yet.");
+                    break;
 
-                while (pinAttempts < 3 && !pinVerified) {
-                    System.out.print("Enter your PIN: ");
-                    int enteredPin = sc.nextInt();
+                case 3:
+                    System.out.println("Bill payment functionality not implemented yet.");
+                    break;
 
-                    if (bc.verifyAccount(enteredAccountNo, enteredPin)) {
-                        pinVerified = true;
-                        System.out.println("✅ LOGIN SUCCESS!");
-                    } else {
-                        pinAttempts++;
-                        System.out.println("❌ WRONG PIN! Attempts left: " + (3 - pinAttempts));
-                        if (pinAttempts == 3) {
-                            System.out.println("🚫 Too many incorrect PIN attempts. System will exit.");
-                            System.exit(0);
-                        }
-                    }
-                }
+                default:
+                    System.out.println("INVALID SELECTION");
+                    break;
+            }
 
-              
-                System.out.println("🏦 Accessing your banking dashboard...");
-                break;
-
-            case 2:
-                System.out.println("🩺 Doctor's appointment feature coming soon...");
-                break;
-
-            case 3:
-                System.out.println("🛍️ Shopping feature coming soon...");
-                break;
-
-            default:
-                System.out.println("❗ Invalid Selection!");
+            System.out.print("\nDo you want to continue? (Y/N): ");
+            char response = sc.next().charAt(0);
+            if (response != 'Y' && response != 'y') {
+                running = false;
+            }
         }
 
+        System.out.println("Thank you for using the system.");
         sc.close();
     }
 }
