@@ -14,16 +14,16 @@ public class Appsecb {
         while (running) {
             System.out.println("\nWhat do you feel like doing today?");
             System.out.println("1 - Banking");
-            System.out.println("2 - Password");
-            System.out.println("3 - Pay Bills");
+            System.out.println("2 - Doctor Appointment");
+            System.out.println("3 - Shopping");
             System.out.print("Enter your choice: ");
             int choice = sc.nextInt();
 
             switch (choice) {
                 case 1:
                     System.out.println("\n1 - Create Account");
-                    System.out.println("2 - Login Account");
-                    System.out.println("3 - Pay Bills");
+                    System.out.println("2 - Login to Account");
+                    System.out.println("3 - View All Accounts");
                     System.out.print("Enter your selection: ");
                     int action = sc.nextInt();
 
@@ -36,9 +36,9 @@ public class Appsecb {
 
                             System.out.print("Enter Account No.: ");
                             int accNo = sc.nextInt();
-                            System.out.print("Enter Pin No.: ");
+                            System.out.print("Enter PIN: ");
                             int pin = sc.nextInt();
-                            System.out.print("Enter a Pin Again: ");
+                            System.out.print("Confirm PIN: ");
                             int pinConfirm = sc.nextInt();
 
                             if (pin == pinConfirm) {
@@ -48,7 +48,7 @@ public class Appsecb {
                                 bApp[accountIndex++] = newAccount;
                                 System.out.println("Account created successfully!");
                             } else {
-                                System.out.println("Pins do not match.");
+                                System.out.println("PINs do not match. Try again.");
                             }
                             break;
 
@@ -60,7 +60,7 @@ public class Appsecb {
                             while (attempts < 3 && !isAuthenticated) {
                                 System.out.print("Enter Account No.: ");
                                 int enteredAccNo = sc.nextInt();
-                                System.out.print("Enter Pin: ");
+                                System.out.print("Enter PIN: ");
                                 int enteredPin = sc.nextInt();
 
                                 for (int i = 0; i < accountIndex; i++) {
@@ -74,15 +74,15 @@ public class Appsecb {
                                 if (!isAuthenticated) {
                                     attempts++;
                                     if (attempts < 3) {
-                                        System.out.println("Invalid Account No. or Pin. Try again (" + (3 - attempts) + " attempt(s) left).");
+                                        System.out.println("Invalid credentials. Attempts left: " + (3 - attempts));
                                     } else {
-                                        System.out.println("Maximum login attempts reached. Returning to menu.");
+                                        System.out.println("Maximum login attempts reached. Returning to main menu.");
                                     }
                                 }
                             }
 
                             if (isAuthenticated) {
-                                System.out.println("Login Success!");
+                                System.out.println("Login successful!");
                                 System.out.println("1 - Deposit");
                                 System.out.println("2 - Withdraw");
                                 System.out.println("3 - Check Balance");
@@ -95,49 +95,58 @@ public class Appsecb {
                                         float depositAmount = sc.nextFloat();
                                         loggedInAccount.deposit(depositAmount);
                                         break;
+
                                     case 2:
                                         System.out.print("Enter amount to withdraw: ");
                                         float withdrawAmount = sc.nextFloat();
                                         loggedInAccount.withdraw(withdrawAmount);
                                         break;
+
                                     case 3:
                                         System.out.println("Your current balance is: " + loggedInAccount.getBalance());
                                         break;
+
                                     default:
-                                        System.out.println("INVALID OPTION");
+                                        System.out.println("Invalid option.");
                                         break;
                                 }
                             }
                             break;
 
                         case 3:
-                            System.out.println("Bill payment functionality not implemented yet.");
+                            if (accountIndex == 0) {
+                                System.out.println("No accounts have been created yet.");
+                            } else {
+                                System.out.println("Existing Accounts:");
+                                for (int i = 0; i < accountIndex; i++) {
+                                    System.out.println("Account No.: " + bApp[i].getAccNo() +
+                                                       ", Balance: " + bApp[i].getBalance());
+                                }
+                            }
                             break;
 
                         default:
-                            System.out.println("INVALID SELECTION");
+                            System.out.println("Invalid selection.");
                             break;
                     }
                     break;
 
                 case 2:
-                    System.out.println("Password functionality not implemented yet.");
+                    System.out.println("Doctor appointment functionality not implemented yet.");
                     break;
 
                 case 3:
-                    System.out.println("Bill payment functionality not implemented yet.");
+                    System.out.println("Shopping feature not implemented yet.");
                     break;
 
                 default:
-                    System.out.println("INVALID SELECTION");
+                    System.out.println("Invalid selection.");
                     break;
             }
 
             System.out.print("\nDo you want to continue? (Y/N): ");
             char response = sc.next().charAt(0);
-            if (response != 'Y' && response != 'y') {
-                running = false;
-            }
+            running = (response == 'Y' || response == 'y');
         }
 
         System.out.println("Thank you for using the system.");
